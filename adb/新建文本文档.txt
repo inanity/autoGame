@@ -1,0 +1,4 @@
+adb connect 127.0.0.1:6555  //连接
+adb shell screencap -p /sdcard/autojump.png  //截图
+adb pull /sdcard/autojump.png .  //传到PC当前目录
+adb shell input tap x y // 点击（x,y）点
