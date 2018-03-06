@@ -19,18 +19,19 @@ int main(int argc, char *argv[])
 //    cv::Mat src,image_src;
 //    cv::Mat imageROI;
 //    cv::Mat TempImg,TempImgRes;
-//    src= cv::imread("screen2.png",0);
+//    src= cv::imread("screencap.png",0);
 //    if(!src.data)
 //    {
 //        qFatal("read  fail\n");
 //    }
 //    image_src = src.clone();            //备份原图
-//    imageROI = image_src(cv::Rect(screen2_ok_x, screen2_ok_y, screen2_ok_width, screen2_ok_height));    //设置待裁取ROI
+//    imageROI = image_src(cv::Rect(card_x, card_y, card_width, card_height));    //设置待裁取ROI
 //    imageROI.convertTo(TempImg, TempImg.type());        //将ROI区域拷贝至dst
-//    threshold(TempImg,TempImgRes,200,255,CV_THRESH_BINARY);
+//    threshold(TempImg,TempImgRes,90,255,CV_THRESH_BINARY);
 
 //    cv::imwrite("model_screen2.png",TempImgRes);
 //    return 0;
+
 
     QCoreApplication a(argc, argv);
     if(-1==connectgame())
@@ -58,10 +59,11 @@ int main(int argc, char *argv[])
         {
             qDebug("killgame error");
         }
+        Sleep(1000);
 
-        if(count>compartMax*2)
+        if(count>compartMax*4)
         {
-            qFatal("main count more than %d",compartMax*2);
+            qFatal("main count more than %d",compartMax*4);
             return -1;
         }
         count++;
@@ -78,16 +80,62 @@ int startgame()
     int currentLayer;
     int currentLayerTemp;
     int layerChallengeNum;
-    for(int i=0;i<loopNum;i++)
+    //for(int i=0;i<loopNum;i++)
+    while(1)
     {
         currentLayer=0;
         currentLayerTemp=0;
         layerChallengeNum=0;
         while(1)
         {
-            currentLayerTemp=readlayer();
+            int count=0;
+            while(1)
+            {
+                //getpicture();
+                currentLayerTemp=readlayer_unwait();
+                qDebug()<<"currentLayerTemp:"<<currentLayerTemp;
+                if(-1 != currentLayerTemp)
+                {
+                    qDebug("fight over");
+                    break;
+                }
+                else
+                {
+                    qDebug()<<"fight tail";
+                }
+                qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
+                x_add=qrand()%ok_width;
+                y_add=qrand()%ok_height;
+                if(-1==click(ok_x+x_add,ok_y+y_add+30))
+                {
+                    qDebug("choosing click(%d %d) challenge_ok_button fail",ok_x+x_add,ok_y+y_add);
+                    return -1;
+                }
+
+                qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
+                x_add=qrand()%return_width;
+                y_add=qrand()%return_height;
+                if(-1==click(return_x+x_add,return_y+y_add))
+                {
+                    qDebug("choosing click(%d %d) return_button fail",return_x+x_add,return_y+y_add);
+                    return -1;
+                }
+
+                qDebug()<<"----------";
+
+                if(count>compartMax/2)
+                {
+                    qDebug("fight error");
+                    return -1;
+                }
+                count++;
+            }
+
+            //currentLayerTemp=readlayer();
             qDebug()<<"current layer:"<<currentLayerTemp;
-            if(-1==currentLayerTemp)
+
+
+            if(-1==currentLayerTemp || 0==currentLayerTemp)
             {
                 qDebug("main readlayer fail");
                 return -1;
@@ -140,7 +188,7 @@ int startgame()
                         return -1;
                     }
 
-                    //等待200choose 出现
+                    //等待200layer 出现
                     if(-1==wait200layer())
                     {
                         qDebug("main wait200layer error");
@@ -166,36 +214,51 @@ int startgame()
                 layerChallengeNum=0;
                 if(1!=currentLayer%10 && currentLayer%10)
                 {
-                    continue;
+                    //continue;
+                    if(-1==choose_go())
+                    {
+                        qDebug("main choose_go3 faile");
+                        return -1;
+                    }
                 }
-                if(-1==choosing(currentLayer))
-                {
-                    qDebug("main choose_card1 faile");
-                    return -1;
-                }
-                if(-1==choose_go())
-                {
-                    qDebug("main choose_go1 faile");
-                    return -1;
+                else{
+                    if(-1==choosing(currentLayer))
+                    {
+                        qDebug("main choose_card1 faile");
+                        return -1;
+                    }
+                    if(-1==choose_go())
+                    {
+                        qDebug("main choose_go1 faile");
+                        return -1;
+                    }
                 }
             }
             else
             {
                 layerChallengeNum++;
-                if(layerChallengeNum>layerChallengeMax)
+                if(layerChallengeNum>layerChallengeMax/2)
                 {
                     qDebug("challenge layer:%d num more than %d",currentLayer,layerChallengeMax);
                     return -1;
                 }
+//                if(0==layerChallengeNum%5 && layerChallengeNum>1)
+//                {
+//                    if(0==currentLayer%10 && layerChallengeNum>11)
+//                    {
+//                        if(-1==choosing(currentLayer,false))
+//                        {
+//                            qDebug("main choose_card2 faile");
+//                            return -1;
+//                        }
+//                    }
+//                }
                 if(0==layerChallengeNum%5 && layerChallengeNum>1)
                 {
-                    if(0==currentLayer%10 && layerChallengeNum>11)
+                    if(-1==choosing(currentLayer,false))
                     {
-                        if(-1==choosing(currentLayer))
-                        {
-                            qDebug("main choose_card2 faile");
-                            return -1;
-                        }
+                        qDebug("main choose_card2 faile");
+                        return -1;
                     }
                 }
                 if(-1==choose_go())
@@ -206,55 +269,14 @@ int startgame()
             }
 
 
-            sleepRand();
+            Sleep(1500);
             if(-1==compareFing())
             {
                 qDebug("main compareFing error");
                 return -1;
             }
+            Sleep(1000);
 
-            int count=0;
-            while(1)
-            {
-                getpicture();
-                if(-1!=readlayer_unwait())
-                {
-                    qDebug("fight over");
-                    break;
-                }
-                else
-                {
-                    qDebug()<<"fight tail";
-                }
-                qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
-                x_add=qrand()%ok_width;
-                y_add=qrand()%ok_height;
-                if(-1==click(ok_x+x_add,ok_y+y_add+30))
-                {
-                    qDebug("choosing click(%d %d) challenge_ok_button fail",ok_x+x_add,ok_y+y_add);
-                    return -1;
-                }
-
-                qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
-                x_add=qrand()%return_width;
-                y_add=qrand()%return_height;
-                if(-1==click(return_x+x_add,return_y+y_add))
-                {
-                    qDebug("choosing click(%d %d) return_button fail",return_x+x_add,return_y+y_add);
-                    return -1;
-                }
-
-                //sleepRand();
-                qDebug()<<"----------";
-
-                if(count>compartMax)
-                {
-                    qDebug("fight error");
-                    return -1;
-                }
-                count++;
-
-            }
         }
     }
     return 0;

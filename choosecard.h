@@ -32,7 +32,7 @@ const int go_threshold=10;
 
 //探索
 const int card_x=940;
-const int card_y=278;
+const int card_y=385;//278;
 const int card_width=40;
 const int card_height=60;
 const std::string card_path="modellocal/card.png";
@@ -87,7 +87,7 @@ int dragItem();
 int partpicture(int x,int y,int width,int height,cv::Mat &partMat,int thresholdValue=90);
 int choose_go();
 int choose_card();
-int choosing(int layer);
+int choosing(int layer,bool flag=true);
 int getPageNum();
 
 

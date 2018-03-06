@@ -119,7 +119,7 @@ int go_gamescreen()
         }
         qDebug()<<"go_gamescreen isScreen1 fail";
 
-        if(count>compartMax)
+        if(count>compartMax/4)
         {
             qDebug()<<"go_gamescreen compare isScreen1 more than "<<compartMax;
             return -1;
@@ -127,12 +127,13 @@ int go_gamescreen()
         count++;
     }
 
-    qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
-    x_add=qrand()%screen1_width;
-    y_add=qrand()%screen1_height;
-    if(-1==click(screen1_x+x_add,screen1_y+y_add))
+//    qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
+//    x_add=qrand()%screen1_width;
+//    y_add=qrand()%screen1_height;
+//    if(-1==click(screen1_x+x_add,screen1_y+y_add))
+    if(-1==click(585,145))
     {
-        qDebug("choosing click(%d %d) 200 Screen1 fail",screen1_x+x_add,screen1_y+y_add);
+        qDebug("choosing click(%d %d) 200 Screen1 fail",585,145);
         return -1;
     }
 
@@ -226,7 +227,7 @@ int go_gamescreen()
             qDebug()<<"go_gamescreen fail";
         }
 
-        if(count>compartMax)
+        if(count>compartMax/4)
         {
             qDebug("go_gamescreen drag more than %d",compartMax);
             return -1;

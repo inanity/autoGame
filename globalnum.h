@@ -23,7 +23,7 @@ const std::string clickf_cmd="adb shell input tap ";
 const std::string dragf_cmd="adb shell input swipe ";
 
 const int compartMax=20;
-const int sleepMax=2000;
+const int sleepMax=500;
 const int loopNum=15;
 const int layerChallengeMax=30;
 

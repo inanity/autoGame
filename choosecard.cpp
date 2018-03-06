@@ -50,7 +50,7 @@ int choose_go()
     int count=0;
     while(1)
     {
-        if(count>compartMax)
+        if(count>compartMax/2)
         {
             qDebug("choose_go compare go.png error");
             return -1;
@@ -108,7 +108,7 @@ int choose_card()
     int count=0;
     while(1)
     {
-        if(count>compartMax)
+        if(count>compartMax/2)
         {
             qDebug("choose_card compare go.png error");
             return -1;
@@ -150,17 +150,18 @@ int choose_card()
     return 0;
 }
 
-int choosing(int layer)
+int choosing(int layer,bool flag)
 {
     int x_add;
     int y_add;
 
+    static int last_card[5]={0,0,0,0,0};
 
-    if(-1==choose_card())
-    {
-        qDebug("choosing choose_card fail");
-        return -1;
-    }
+//    if(-1==choose_card())
+//    {
+//        qDebug("choosing choose_card fail");
+//        return -1;
+//    }
 
     //选卡策略
     int cardlocal[21][5];
@@ -244,6 +245,28 @@ int choosing(int layer)
         layernum=layer/10;
     }
     qDebug()<<"choose layernum:"<<layernum;
+
+    if(last_card[0]==cardlocal[layernum][0] &&
+            last_card[1]==cardlocal[layernum][1] &&
+            last_card[2]==cardlocal[layernum][2] &&
+            last_card[3]==cardlocal[layernum][3] &&
+            last_card[4]==cardlocal[layernum][4] &&
+            flag ){
+            qDebug()<<"last card same";
+            return 0;
+    }else{
+        last_card[0]=cardlocal[layernum][0];
+        last_card[1]=cardlocal[layernum][1];
+        last_card[2]=cardlocal[layernum][2];
+        last_card[3]=cardlocal[layernum][3];
+        last_card[4]=cardlocal[layernum][4];
+    }
+
+    if(-1==choose_card())
+    {
+        qDebug("choosing choose_card fail");
+        return -1;
+    }
 
     int count;
     int currentPageNum;

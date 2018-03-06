@@ -16,6 +16,6 @@ int bSums(cv::Mat &src)
 int sleepRand()
 {
     qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
-    int num=qrand()%sleepMax+1000;
+    int num=qrand()%sleepMax;//+500;
     Sleep(num);
 }

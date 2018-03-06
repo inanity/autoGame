@@ -39,10 +39,18 @@ int readlayer()
 int readlayer_unwait()
 {
     int layerNum=0;
+
+    if(-1==getpicture())
+    {
+        qDebug("readlayer_unwait getpicture fail");
+        return -1;
+    }
+
+
     layerNum=readTriNum();
     if(-1==layerNum)
     {
-        qDebug()<<"readlayer readTriNum fail";
+        qDebug()<<"readlayer_unwait readTriNum fail";
     }
     else
     {
@@ -52,7 +60,7 @@ int readlayer_unwait()
     layerNum=readDoubleNum();
     if(-1==layerNum)
     {
-        qDebug()<<"readlayer readDoubleNum fail";
+        qDebug()<<"readlayer_unwait readDoubleNum fail";
     }
     else
     {
@@ -164,11 +172,11 @@ int readTriNum()
     int layerNum=0;
     int numtemp;
 
-    if(-1==getpicture())
-    {
-        qDebug("readlayer getpicture fail");
-        return -1;
-    }
+//    if(-1==getpicture())
+//    {
+//        qDebug("readlayer getpicture fail");
+//        return -1;
+//    }
 
     //获取百位数值
     numtemp=readhundred();
@@ -256,11 +264,11 @@ int readDoubleNum()
     int layerNum=0;
     int numtemp;
 
-    if(-1==getpicture())
-    {
-        qDebug("readDoubleNum getpicture fail");
-        return -1;
-    }
+//    if(-1==getpicture())
+//    {
+//        qDebug("readDoubleNum getpicture fail");
+//        return -1;
+//    }
 
     //获取十位数值
     numtemp=readDoubleDecad();
@@ -314,11 +322,11 @@ int readSingleNum()
 {
     int layerNum=0;
 
-    if(-1==getpicture())
-    {
-        qDebug("readSingleNum getpicture fail");
-        return -1;
-    }
+//    if(-1==getpicture())
+//    {
+//        qDebug("readSingleNum getpicture fail");
+//        return -1;
+//    }
 
     //获取个位数值
     layerNum=readSingleUnit();

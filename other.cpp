@@ -23,7 +23,6 @@ int compareFing()
         }
         count++;
 
-        sleepRand();
 //        if(-1==getpicture())
 //        {
 //            qDebug("vsing getpicture fail");
@@ -40,12 +39,16 @@ int compareFing()
         {
             qDebug()<<"compare f ok continue res_num:"<<res_num;
             continue;
+            //return 0;
         }
         else
         {
             qDebug()<<"compare f fail res_num:"<<res_num;
             return 0;
+            //continue;
         }
+
+        sleepRand();
     }
 }
 

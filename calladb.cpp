@@ -50,7 +50,6 @@ int killgame()
     }
     qDebug()<<result.c_str();
 
-
     return 0;
 }
 
